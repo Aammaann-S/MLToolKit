@@ -1,0 +1,35 @@
+name: Python tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install the package
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Build the shared snippet catalog
+        run: python scripts/build_snippets.py
+      - name: Syntax check
+        run: python -m compileall -q MLToolKit workflows examples tests scripts
+      - name: Validate snippets
+        run: python scripts/validate_snippets.py
+      - name: Test the VS Code completion logic
+        working-directory: vscode-extension
+        run: npm ci && npm test
+      - name: Run unit tests
+        run: python -m pytest

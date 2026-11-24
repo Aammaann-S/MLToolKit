@@ -1,0 +1,47 @@
+{
+  "name": "mltoolkit",
+  "displayName": "MLToolKit",
+  "description": "Import-aware autocomplete that inserts runnable machine-learning code after import MLToolKit.",
+  "version": "1.1.0",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Programming Languages", "Snippets"],
+  "keywords": ["python", "machine-learning", "MLToolKit", "snippets"],
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:jupyter"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "MLToolKit",
+      "properties": {
+        "mltoolkit.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Offer MLToolKit completions after a real MLToolKit import."
+        },
+        "mltoolkit.maxItems": {
+          "type": "number",
+          "default": 300,
+          "description": "Maximum number of matching snippets to show."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "test": "npm run compile && node --test test/completion.test.js",
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.6.0"
+  }
+}
